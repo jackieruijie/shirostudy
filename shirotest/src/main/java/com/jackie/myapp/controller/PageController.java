@@ -1,0 +1,14 @@
+package com.jackie.myapp.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class PageController {
+
+    @RequestMapping("/login")
+    public String loginPage(){
+            System.out.println("登陆跳转");
+        return "/login";
+    }
+}
