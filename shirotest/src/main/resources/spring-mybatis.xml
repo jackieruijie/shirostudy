@@ -60,7 +60,7 @@
         <!--        页面首页-->
 <!--        <property name="indexUrl" value="/login"/>-->
         <!--    登陆页面-->
-        <property name="loginUrl" value="/login"/>
+        <property name="loginUrl" value="/login.jsp"/>
         <!--        登陆成功后页面-->
         <property name="successUrl" value="/home"/>
         <!--        没有权限的页面-->

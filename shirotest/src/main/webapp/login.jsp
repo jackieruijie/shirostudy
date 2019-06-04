@@ -10,8 +10,18 @@
 <head>
     <title>login</title>
 </head>
+<%
+    String path = request.getContextPath();
+    String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+
 <body>
 <h1>登陆</h1>
+<form action="<%=basePath%>login" method="post">
+    用户名： <input type="text" name="username"></br>
+    密&nbsp;&nbsp;&nbsp;&nbsp;码：<input type="password" name="password"></br>
+    <input type="submit" value="登陆">
+</form>
 
 </body>
 </html>
