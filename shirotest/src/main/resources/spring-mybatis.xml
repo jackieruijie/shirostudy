@@ -1,106 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:jee="http://www.springframework.org/schema/jee"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
 		http://www.springframework.org/schema/jee   http://www.springframework.org/schema/jee/spring-jee-4.3.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
-    <!-- Root Context: defines shared resources visible to all other web components -->
-    <!--引入配置文件 -->
-    <context:property-placeholder
-            location="classpath:jdbc.properties"/>
-    <bean id="dataSource"
-          class="org.apache.commons.dbcp2.BasicDataSource"
-          destroy-method="close">
-        <!-- Connection Info -->
-        <property name="driverClassName"
-                  value="${jdbc.driverClassName}"/>
-        <property name="url" value="${jdbc.url}"/>
-        <property name="username" value="${jdbc.username}"/>
-        <property name="password" value="${jdbc.password}"/>
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<!--引入配置文件 -->
+	<context:property-placeholder
+		location="classpath:jdbc.properties" />
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp2.BasicDataSource"
+		destroy-method="close">
+		<!-- Connection Info -->
+		<property name="driverClassName"
+			value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
 
-        <!-- Connection Pooling Info -->
-        <property name="maxIdle" value="${jdbc.maxIdle}"/>
-        <property name="minIdle" value="${jdbc.minIdle}"/>
-        <property name="defaultAutoCommit"
-                  value="${jdbc.defaultAutoCommit}"/>
-    </bean>
+		<!-- Connection Pooling Info -->
+		<property name="maxIdle" value="${jdbc.maxIdle}" />
+		<property name="minIdle" value="${jdbc.minIdle}" />
+		<property name="defaultAutoCommit"
+			value="${jdbc.defaultAutoCommit}" />
+	</bean>
+	<!-- MyBatis配置 -->
+	<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- 显式指定Mapper文件位置 -->
+		<property name="mapperLocations"
+			value="classpath*:mapper/*.xml" />
+	</bean>
 
-    <!--	-->
-    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-        <!-- Single realm app.  If you have multiple realms, use the 'realms' property instead. -->
-        <property name="realm" ref="myRealm"/>
-        <!-- By default the servlet container sessions will be used.  Uncomment this line
-             to use shiro's native sessions (see the JavaDoc for more): -->
-        <!--		 <property name="sessionMode" value="native"/>-->
-        <!--		 <property name="cacheManager" value="cacheManager"/>-->
-    </bean>
-    <!--	可以自定义在springIOC容器中shiro bean的生命周期方法-->
-    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+	<bean id="sqlSessionTemplate"
+		class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+		<!-- SIMPLE 、 REUSE 、 BATCH -->
+		<constructor-arg index="1" value="SIMPLE" />
+	</bean>
 
-    <!-- Define the Shiro Realm implementation you want to use to connect to your back-end -->
-    <!-- security datasource: -->
-    <bean id="myRealm" class="org.apache.shiro.realm.jdbc.JdbcRealm">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="permissionsLookupEnabled" value="true"/>
-    </bean>
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 映射器接口文件的包路径， -->
+		<property name="basePackage" value="com.ust.myapp.mapper" />
+		<property name="sqlSessionFactoryBeanName"
+			value="sqlSessionFactory" />
+	</bean>
+	
+	<!-- 事务管理器 -->
+	<bean id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- 开启事务注解，标注@Transactional的类和方法将具有事务性 -->
+	<tx:annotation-driven
+		transaction-manager="txManager" />
 
-
-    <!--	配置shiroFilter
-            id必须和web.xml中的 DelegatingFilterProxy的<filter-name>一致
-    -->
-    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
-        <property name="securityManager" ref="securityManager"/>
-        <!--        页面首页-->
-<!--        <property name="indexUrl" value="/login"/>-->
-        <!--    登陆页面-->
-        <property name="loginUrl" value="/login.jsp"/>
-        <!--        登陆成功后页面-->
-        <property name="successUrl" value="/home"/>
-        <!--        没有权限的页面-->
-        <property name="unauthorizedUrl" value="/unauthorized.jsp"/>
-        <!-- The 'filters' property is not necessary since any declared javax.servlet.Filter bean  -->
-        <!-- defined will be automatically acquired and available via its beanName in chain        -->
-        <!-- definitions, but you can perform instance overrides or name aliases here if you like: -->
-        <!-- <property name="filters">
-            <util:map>
-                <entry key="logout" value-ref="logoutFilter" />
-            </util:map>
-        </property> -->
-        <!--
-        配置的哪些页面需要受保护以及访问这些页面需要的权限
-        anon：课匿名访问
-        authc：必须登陆
-        -->
-        <property name="filterChainDefinitions">
-            <value>
-                # some example chain definitions:
-                # /admin/** = authc, roles[admin]
-                # /docs/** = authc, perms[document:read]
-                /login = anon
-                /logout = anon
-                /error = anon
-                /** = user
-                # more URL-to-FilterChain definitions here
-            </value>
-        </property>
-    </bean>
-
-
-    <!-- Enable Shiro Annotations for Spring-configured beans.  Only run after -->
-    <!-- the lifecycleBeanProcessor has run: -->
-    <!--启用ioc容器中使用shiro的注解，但必须在配置了lifecycleBeanPostProcessor之后才使用	-->
-    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
-          depends-on="lifecycleBeanPostProcessor"/>
-    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
-        <property name="securityManager" ref="securityManager"/>
-    </bean>
-
+	<context:component-scan
+		base-package="com.jackie.myapp.*" />
 
 </beans>

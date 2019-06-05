@@ -9,9 +9,10 @@
 <!--  <welcome-file-list>
     <welcome-file>/login.jsp</welcome-file>
   </welcome-file-list>-->
+  <!-- Spring和mybatis的配置文件 -->
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>classpath*:spring-mybatis.xml</param-value>
+    <param-value>classpath:spring-mybatis.xml</param-value>
   </context-param>
 
   <!-- Creates the Spring Container shared by all Servlets and Filters -->

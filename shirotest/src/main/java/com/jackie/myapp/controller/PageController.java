@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping("/")
 public class PageController {
 
-    @RequestMapping(value = "login",method = RequestMethod.POST)
+    @RequestMapping(value = "/login",method = RequestMethod.POST)
     public String loginPage(String username,String password){
         Subject subject= SecurityUtils.getSubject();
         if (!subject.isAuthenticated()){//如果当前用户未登录则进行登陆操作
@@ -31,7 +30,6 @@ public class PageController {
                 e.printStackTrace();
                 System.out.println("其他错误！");
             }
-
         }
             System.out.println("登陆跳转");
         return "redirect:main";
