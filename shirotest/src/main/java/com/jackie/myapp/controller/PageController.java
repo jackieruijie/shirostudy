@@ -43,10 +43,6 @@ public class PageController {
         return "main";
     }
 
-
-
-
-
     @RequestMapping("/logout")
     public String logout(){
         Subject currentUser = SecurityUtils.getSubject(); //拿到当前用户
