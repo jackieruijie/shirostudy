@@ -10,6 +10,10 @@
 <head>
     <title>login</title>
 </head>
+<%
+    String path = request.getContextPath();
+    String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
 <body>
 
 <h1>登陆页面！！！</h1>

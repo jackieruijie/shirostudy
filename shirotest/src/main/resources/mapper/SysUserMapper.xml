@@ -178,4 +178,10 @@
       is_profile = #{isProfile,jdbcType=BIT}
     where user_id = #{userId,jdbcType=VARCHAR}
   </update>
+
+
+  <select id="getUserByUsername" resultType="com.jackie.myapp.model.SysUser" parameterType="java.lang.String">
+    SELECT * FROM sys_user WHERE user_name= #{username};
+  </select>
+
 </mapper>

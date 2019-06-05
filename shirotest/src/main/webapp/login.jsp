@@ -23,5 +23,9 @@
     <input type="submit" value="登陆">
 </form>
 
+
+<%--<h1>注册</h1>--%>
+<a href="<%=basePath%>register">没有账号？请先注册！！！</a>
+
 </body>
 </html>

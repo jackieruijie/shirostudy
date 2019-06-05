@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/mvc_shiro/mvc_shiro.iml" filepath="$PROJECT_DIR$/mvc_shiro/mvc_shiro.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/shirostudy.iml" filepath="$PROJECT_DIR$/.idea/shirostudy.iml" />
       <module fileurl="file://$PROJECT_DIR$/shirotest/shirotest.iml" filepath="$PROJECT_DIR$/shirotest/shirotest.iml" />
     </modules>

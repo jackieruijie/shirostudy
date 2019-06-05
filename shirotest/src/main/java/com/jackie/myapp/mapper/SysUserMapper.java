@@ -1,6 +1,7 @@
 package com.jackie.myapp.mapper;
 
 import com.jackie.myapp.model.SysUser;
+import org.apache.ibatis.annotations.Param;
 
 public interface SysUserMapper {
     /**
@@ -50,4 +51,7 @@ public interface SysUserMapper {
      * @mbg.generated Wed Jun 05 11:21:23 CST 2019
      */
     int updateByPrimaryKey(SysUser record);
+
+    //通过用户民获取用户信息
+    public SysUser getUserByUsername(@Param("username") String username);
 }

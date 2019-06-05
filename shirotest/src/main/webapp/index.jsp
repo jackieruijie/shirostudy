@@ -10,6 +10,10 @@
 <head>
     <title>首页</title>
 </head>
+<%
+    String path = request.getContextPath();
+    String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
 <body>
 <p>测试！！！！</p>
 </body>
