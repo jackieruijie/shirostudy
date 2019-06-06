@@ -25,7 +25,6 @@ public class PageController {
     public String loginPage(String username,String password){
         //获取当前登录用户
         Subject subject= SecurityUtils.getSubject();
-        System.out.println("---------->user:"+username+"---------->pass:"+password);
         if (!subject.isAuthenticated()){//如果当前用户未登录则进行登陆操作
             try {
                 UsernamePasswordToken token = new UsernamePasswordToken(username,password);
@@ -34,16 +33,16 @@ public class PageController {
                 return "index";
             }catch (UnknownAccountException e) {
                 e.printStackTrace();
-                System.out.println(e.getMessage());
+//                System.out.println(e.getMessage());
                 System.out.println("用户名错误！");
                 return "redirect:/userlogin";
             }catch (IncorrectCredentialsException e) {
                 e.printStackTrace();
-                System.out.println("密码错误！");
+//                System.out.println("密码错误！");
                 System.out.println(e.getMessage());
             } catch (AuthenticationException e) {
                 e.printStackTrace();
-                System.out.println("其他错误！");
+//                System.out.println("其他错误！");
                 System.out.println(e.getMessage());
             }
         }

@@ -4,10 +4,14 @@ import com.jackie.myapp.mapper.SysUserMapper;
 import com.jackie.myapp.model.SysUser;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 对用户进行用户名和密码验证
@@ -26,7 +30,21 @@ public class ShiroRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        return null;
+        //从PrincipalCollection中获取登陆用户信息
+        SysUser user= (SysUser) principalCollection;
+        if (user==null){
+            return null;
+        }
+        //所有登陆用户都有普通用户的权限
+        Set<String> roles=new HashSet<>();
+        roles.add("user");
+        //获取当前登陆用户所拥有的权限
+        if (user.getUserName()!=null){
+            roles.add(user.getUserName());
+        }
+        //授权SimpleAuthenticationInfo,并设置其属性
+        SimpleAuthorizationInfo info=new SimpleAuthorizationInfo(roles);
+        return info;
     }
 
     /**
