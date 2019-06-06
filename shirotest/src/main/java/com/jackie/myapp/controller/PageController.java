@@ -1,17 +1,25 @@
 package com.jackie.myapp.controller;
 
+import com.jackie.myapp.model.SysUser;
+import com.jackie.myapp.service.SysUserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.annotation.Resource;
+
 @Controller
 public class PageController {
+
+    @Autowired
+    private SysUserService sysUserService;
 
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     public String loginPage(String username,String password){
@@ -40,7 +48,7 @@ public class PageController {
             }
         }
             System.out.println("登陆跳转");
-        return "main";
+        return "login";
     }
 
     @RequestMapping("/logout")
@@ -68,6 +76,33 @@ public class PageController {
     public String register(){
         System.out.println("现在开始注册页面的开始！！！！！");
         return "register";
+    }
+
+
+    /**
+     * 用户登录
+     * @return 返回登录页面
+     */
+    @RequestMapping(value = "/userRegister",method = RequestMethod.POST)
+    public String userRegister(String username,String password,String fullname){
+        System.out.println("username:"+username);
+        System.out.println("password:"+password);
+        System.out.println("fullname:"+fullname);
+        System.out.println("开始注册！！！！！");
+        SysUser user=new SysUser();
+        user.setUserName(username);
+        user.setPassword(password);
+        user.setFullName(fullname);
+        int res=sysUserService.registerNewUser(user);
+        if (res>0){
+            System.out.println("注册成功！！！！！");
+            return "login";
+        }else {
+            System.out.println("注册失败！！！！！");
+            return "register";
+        }
+
+
     }
 
 

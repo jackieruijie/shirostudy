@@ -60,6 +60,9 @@
       #{isDelete,jdbcType=BIT}, #{column8,jdbcType=INTEGER}, #{isProfile,jdbcType=BIT}
       )
   </insert>
+
+
+  <!--  用户注册  -->
   <insert id="insertSelective" parameterType="com.jackie.myapp.model.SysUser">
     <!--
       WARNING - @mbg.generated
@@ -179,9 +182,11 @@
     where user_id = #{userId,jdbcType=VARCHAR}
   </update>
 
-
+<!--通过用户名获取用户-->
   <select id="getUserByUsername" resultType="com.jackie.myapp.model.SysUser" parameterType="java.lang.String">
     SELECT * FROM sys_user WHERE user_name= #{username};
   </select>
+
+
 
 </mapper>

@@ -19,11 +19,22 @@ public class ShiroRealm extends AuthorizingRealm {
     @Autowired
     private SysUserMapper userMapper;
 
+    /**
+     * 授权
+     * @param principalCollection
+     * @return
+     */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         return null;
     }
 
+    /**
+     * 认证
+     * @param authenticationToken
+     * @return
+     * @throws AuthenticationException
+     */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         //把authenticationToken转换为UsernamePasswordToken
